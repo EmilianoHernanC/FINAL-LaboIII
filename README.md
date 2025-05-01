@@ -11,8 +11,7 @@ Además se utiliza:
 
 ## 📬 Pruebas con Postman
 La colección de pruebas se encuentra en la carpeta `/postman`.
-
-Importar el archivo `JAVA-PROG3.postman_collection.json` en Postman para acceder a los endpoints de prueba.
+`JAVA-PROG3.postman_collection.json` 
 
 ---
 
