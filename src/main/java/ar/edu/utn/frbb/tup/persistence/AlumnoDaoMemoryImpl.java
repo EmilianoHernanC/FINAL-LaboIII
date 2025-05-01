@@ -1,43 +1,64 @@
 package ar.edu.utn.frbb.tup.persistence;
 
 import ar.edu.utn.frbb.tup.model.Alumno;
-import ar.edu.utn.frbb.tup.persistence.exception.DaoException;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
+import ar.edu.utn.frbb.tup.model.exception.AlumnoNotFoundException;
+import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Random;
+import java.util.concurrent.atomic.AtomicLong;
 
-
-@Service
+@Repository
 public class AlumnoDaoMemoryImpl implements AlumnoDao {
 
-    private static Map<Long, Alumno> repositorioAlumnos = new HashMap<>();
+    private static final Map<Long, Alumno> repositorioAlumnos = new HashMap<>();
+    private static final AtomicLong idGenerator = new AtomicLong(1);
 
     @Override
     public Alumno saveAlumno(Alumno alumno) {
-        Random random = new Random();
-        alumno.setId(random.nextLong());
-        return repositorioAlumnos.put(alumno.getDni(), alumno);
+        if (alumno.getId() == null) {
+            alumno.setId(idGenerator.getAndIncrement());
+        }
+        repositorioAlumnos.put(alumno.getId(), alumno);
+        return alumno;
     }
 
     @Override
     public Alumno findAlumno(String apellidoAlumno) {
-        for (Alumno a: repositorioAlumnos.values()) {
-            if (a.getApellido().equals(apellidoAlumno)){
-                return a;
-            }
-        }
-        throw new ResponseStatusException(
-                HttpStatus.NOT_FOUND, "No existen alumnos con esos datos."
-        );
+        return repositorioAlumnos.values().stream()
+                .filter(a -> a.getApellido().equals(apellidoAlumno))
+                .findFirst()
+                .orElseThrow(() -> new AlumnoNotFoundException("No se encontró alumno con apellido: " + apellidoAlumno));
     }
 
     @Override
     public Alumno loadAlumno(Long dni) {
-        return null;
+        return repositorioAlumnos.values().stream()
+                .filter(a -> a.getDni().equals(dni))
+                .findFirst()
+                .orElseThrow(() -> new AlumnoNotFoundException("No se encontró alumno con DNI: " + dni));
     }
 
+    @Override
+    public Alumno findAlumnoById(Long id) {
+        Alumno alumno = repositorioAlumnos.get(id);
+        if (alumno == null) {
+            throw new AlumnoNotFoundException("No se encontró alumno con ID: " + id);
+        }
+        return alumno;
+    }
+
+    @Override
+    public List<Alumno> findAll() {
+        return new ArrayList<>(repositorioAlumnos.values());
+    }
+
+    @Override
+    public void deleteAlumno(Alumno alumno) {
+        if (repositorioAlumnos.remove(alumno.getId()) == null) {
+            throw new AlumnoNotFoundException("No se pudo eliminar el alumno con ID: " + alumno.getId());
+        }
+    }
 }
