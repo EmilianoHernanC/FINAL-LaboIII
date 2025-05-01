@@ -1,11 +1,22 @@
 # FinalLaboIII
-Proyecto final de la materia Laboratio de computacion III
+Proyecto final de la materia Laboratorio de Computación III
 
-El proyecto se trata de un sistema universitario, el mismo debe ser una API REST
-El proyecto tiene que ser en Spring Boot, usando arquitectura en capas ( presentation - business - persistence ) y MVC
-ademas de estas tecnologias, se tiene que usar Maven y JUnit y Mockito para hacer testeos unitarios, ademas de documentacion en Postman
+El proyecto se trata de un sistema universitario, el mismo debe ser una API REST.  
+Está hecho con **Spring Boot**, usando arquitectura en capas (`presentation - business - persistence`) y el patrón **MVC**.
+
+Además se utiliza:
+- Maven para la gestión de dependencias
+- JUnit y Mockito para tests unitarios
+- Postman para documentar y probar los endpoints
+
+## 📬 Pruebas con Postman
+La colección de pruebas se encuentra en la carpeta `/postman`.
+
+Importar el archivo `JAVA-PROG3.postman_collection.json` en Postman para acceder a los endpoints de prueba.
+
+---
 
 ## Autor
 
-Emiliano Cortez  
+**Emiliano Cortez**  
 Trabajo Final - UTN - Laboratorio III
